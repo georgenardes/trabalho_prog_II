@@ -3,6 +3,73 @@
 #include <stdlib.h>
 #include "menu.h"
 
+typedef struct {
+    char nome[80];
+    char genero[25];
+    unsigned short ano; // 16 bits
+    float duracao;
+    char diretor[100];
+} Filme;
+
+void print_vector(Filme vetor[], int tam);
+void print_arq(FILE *arquivo);
+void escrita(char filme[255], FILE *arquivo);
+void cadastrar(FILE *arquivo);
+Filme* linha_para_filme (char *linha);
+void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]);
+FILE *init_arquivo(char nome[50]);
+
+
+Filme* linha_para_filme (char *linha) {
+    Filme *filme = malloc(sizeof(Filme));
+
+    char *st = linha;
+
+    const char delimiter[] = ";";
+
+
+    // primeira coluna
+    char *ch;
+    ch = strtok(st, delimiter);
+    sprintf(filme->nome, "%s", ch);
+
+    // segunda coluna
+    if (ch != NULL) {
+        ch = strtok(NULL, delimiter);
+        sprintf(filme->genero, "%s", ch);
+    }
+
+    // terceira coluna
+    if (ch != NULL) {
+        ch = strtok(NULL, delimiter);
+        char sano[5];
+        sprintf(sano, "%s", ch);
+        filme->ano = (unsigned short) atoi(sano);
+    }
+
+    // quarta coluna
+    if (ch != NULL) {
+        ch = strtok(NULL, delimiter);
+        char sdur[5];
+        sprintf(sdur, "%s", ch);
+        filme->duracao = atof(sdur);
+    }
+
+    // quinta coluna
+    if (ch != NULL) {
+        ch = strtok(NULL, delimiter);
+        sprintf(filme->diretor, "%s", ch);
+    }
+
+    printf("fim\n");
+    printf("%s\n", filme->nome);
+    printf("%s\n", filme->genero);
+    printf("%d\n", (int)filme->ano);
+    printf("%.2f\n", filme->duracao);
+    printf("%s\n", filme->diretor);
+
+    return filme;
+}
 
 void cadastrar(FILE *arquivo){
 
@@ -31,7 +98,7 @@ void escrita(char filme[255], FILE *arquivo){
 
 }
 
-void leitura(FILE *arquivo){
+void print_arq(FILE *arquivo){
 
     printf("Conteudo do arquivo: \n");
     char saux[255];
@@ -40,35 +107,24 @@ void leitura(FILE *arquivo){
     }
 }
 
-/*
-void transfere(FILE *arquivo, FILE *aux_arquivo, char nome[50]){
+void print_vector(Filme vetor[], int tam){
 
-    printf("Transferencia de dados\n");
-
-    char saux[255];
-    int iaux = 0;
-    int er;
-
-    while(fgets(saux, 255, arquivo) != NULL){
-        printf("%s\n", saux);
-        er = fputs(saux, aux_arquivo);
-
-        if(er == EOF){
-            printf("Erro ao passar uma linha do arquivo. Linha: %d", iaux);
-        }
-
-        iaux++;
+    printf("Filmes\n");
+    for(int i = 0; i<tam; i++){
+        printf("Info do filme %s\n", vetor[i].nome);
+        printf("%s\n", vetor[i].genero);
+        printf("%d\n", (int)vetor[i].ano);
+        printf("%f\n", vetor[i].duracao);
+        printf("%s\n", vetor[i].diretor);
+        printf("\n");
     }
-    printf("Terminou de ler o arquivo. O arquivo contem %d linhas\n", iaux);
-    fclose(arquivo);
-    remove(nome);
 
     return;
 }
-*/
-void transfere(FILE *arquivo, char dados[][255], char nome[50]){
 
-    printf("Transferencia de dados\n");
+void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
+
+    printf("Transferencia de dados %d\n", *tam);
 
     char saux[255];
     int iaux = 0;
@@ -76,11 +132,10 @@ void transfere(FILE *arquivo, char dados[][255], char nome[50]){
 
     while(fgets(saux, 255, arquivo) != NULL){
         printf("%s\n", saux);
-        dados[iaux][255] = saux;
-
-        iaux++;
+        dados[iaux] = *linha_para_filme(saux);
+        (*tam)++;
     }
-    printf("Terminou de ler o arquivo. O arquivo contem %d linhas\n", iaux);
+    printf("Terminou de ler o arquivo. O arquivo contem %d linhas\n", *tam);
     //fclose(arquivo);
     //remove(nome);
 
@@ -107,9 +162,9 @@ FILE *init_arquivo(char nome[50]){
 
 }
 
-
 int main()
 {
+
     FILE *arquivo;
     FILE *aux_arquivo;
 
@@ -117,18 +172,19 @@ int main()
     aux_arquivo = init_arquivo("auxiliar.txt");
 
     int op = 0;
-    char dados[255][255]; //Cria a variavel que vai guardar as informações durante a execução do código. Armazena até 255 strings de 255 caracteres.
+    Filme dados[255];
 
     //menu();
 
     int tam = 0;
     //transfere(arquivo, aux_arquivo, "dados.txt");
-    transfere(arquivo, dados, "dados.txt");
+    transfere(arquivo, dados, &tam, "dados.txt");
 
-    leitura(arquivo);
-    leitura(aux_arquivo);
+    printf("Nome do filme: %s\n", dados[0].nome);
 
-    printf("tam: %d\n", tam);
+    //print_vector(dados, tam);
+    //print_arq(arquivo);
+    //print_arq(aux_arquivo);
 
     printf("Opcao: ");
     //scanf("%d", &op);
@@ -146,6 +202,14 @@ int main()
     }
 
 
+
+    char linha[] = "Nome;Genero;2000;2;Nolan";
+    Filme *filme = linha_para_filme(linha);
+    printf("linha %s\n", linha);
+
+    // menu();
+
     printf("Fim do programa!!\n");
+    getch();
     return 0;
 }
