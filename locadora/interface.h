@@ -1,6 +1,5 @@
-#ifndef MENU_H_INCLUDED
-#define MENU_H_INCLUDED
-
+#ifndef INTERFACE_H_INCLUDED
+#define INTERFACE_H_INCLUDED
 
 #include <windows.h>
 #include <conio.h>
@@ -45,75 +44,61 @@ void textcolor(int text, int background)
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD) (text | background<<4));
 }
 
-
-void cabecalho()
-{
-    gotoxy(0, 0);
-    textcolor(LIGHTYELLOW, BLACK);
-    printf( "Locadora de Videos");
-    gotoxy(0, 1);
-    textcolor(YELLOW, BLACK);
-    printf( "Engenharia de Computacao - UNIVALI");
-    gotoxy(0, 2);
-    printf( "<Nome da disciplina>");
-    gotoxy(0, 3);
-    printf( "Andriy Fujii");
-    textcolor(WHITE, BLACK);
-    gotoxy(0, 7);
-
-	//Opcional
-    printf( "Opcoes:");
-    gotoxy(0, 16);
-    printf( "Utilize as setas para cima/baixo para selecionar uma opcao");
-    gotoxy(0, 17);
-    printf( "Pressione Enter para selecionar");
+void drawBox(int xi, int yi, int x, int y){ // FUNÇÃO PARA DESENHAR PAREDES
+    int h, l; // VARIAVEL AUXILIAR DE DESENHO
+    for(l=0;l<x;l++)   // DESENHA PAREDE HORIZONTAL
+    {
+        gotoxy(xi+l,yi); printf("%c",205);
+        gotoxy(xi+l,yi+y); printf("%c",205);
+    }
+    for(h=1;h<y;h++)   // DESENHA PAREDE VERTICAL
+    {
+        gotoxy(xi,yi+h); printf("%c",186);
+        gotoxy(xi+x,yi+h); printf("%c",186);
+    }
+    // PONTAS DA ESQUERDA
+    gotoxy(xi,yi); printf("%c", 201); ///superior
+    gotoxy(xi,yi+y); printf("%c", 200); ///inferior
+    // PONTAS DA DIREITA
+    gotoxy(xi+x,yi); printf("%c",187); ///superior
+    gotoxy(xi+x, yi+y); printf("%c",188); ///inferior
 }
 
-//Funcionamento do menu
-//Tecla 72 e a setinha p/ cima
-//Tecla 80 e a setinha p/ baixo
-//Tecla 13 e enter
-int menut()
+int menu()
 {
+    drawBox(0,0, 118, 29);
     int tecla, aux = 0;
     do{
         textcolor(BRIGHTWHITE, BLACK); //Da "highlight" na opcao selecionada
-        gotoxy(18, 7);
-        printf( "Adicionar novo video");
+        gotoxy(5, 5);
+        printf( "Pesquisar");
 
-        gotoxy(18, 8);
-        printf( "View created characters");
+        gotoxy(5, 8);
+        printf( "Cadastrar");
 
-        gotoxy(18, 9);
-        printf( "Load");
+        gotoxy(5, 9);
+        printf( "Deletar");
 
-        gotoxy(18, 10);
-        printf( "Delete character");
-
-        gotoxy(18, 11);
+        gotoxy(5, 14);
         printf( "Exit");
 
         textcolor(BLACK, WHITE);
         switch (aux)
         {
             case 0:
-                gotoxy(18, 7);
-                printf( "Add new character");
+                gotoxy(5, 5);
+                printf( "Pesquisar");
                 break;
             case 1:
-                gotoxy(18, 8);
-                printf( "View created characters");
+                gotoxy(5, 8);
+                printf( "Cadastrar");
                 break;
             case 2:
-                gotoxy(18, 9);
-                printf( "Load");
+                gotoxy(5, 9);
+                printf( "Deletar");
                 break;
             case 3:
-                gotoxy(18, 10);
-                printf( "Delete character");
-                break;
-            case 4:
-                gotoxy(18, 11);
+                gotoxy(5, 14);
                 printf( "Exit");
                 break;
         }
@@ -128,7 +113,7 @@ int menut()
                     aux--;
                 break;
             case 80:
-                if (aux != 4)
+                if (aux != 3)
                     aux++;
                 break;
         }
@@ -139,4 +124,5 @@ int menut()
     return -1;
 }
 
-#endif // MENU_H_INCLUDED
+
+#endif // INTERFACE_H_INCLUDED

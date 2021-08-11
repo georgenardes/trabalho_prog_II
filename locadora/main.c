@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "menu.h"
+#include "interface.h"
 
 typedef struct {
     char nome[80];
@@ -120,7 +120,7 @@ void cadastrar(Filme filmes[], int *tam){
         filmes[*tam] = *filme;
         (*tam)++;
 
-        printf("%d de %d filmes cadastrados\n", *tam, 255);
+        //printf("%d de %d filmes cadastrados\n", *tam, 255);
 
     }else{
         printf("Limite de filmes cadastrados atingido: %d de %d filmes cadastrados\n", *tam, 255);
@@ -158,7 +158,7 @@ void escrita(char filme[255], FILE *arquivo){
         if(er == EOF){
             printf("Erro ao escrever uma linha do arquivo.");
         }else{
-            printf("Filme registrado com sucesso!!\n");
+            //printf("Filme registrado com sucesso!!\n");
         }
 
 }
@@ -193,7 +193,7 @@ void print_vector(Filme vetor[], int tam){
 void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
 
 
-    printf("Transferencia de dados %d\n", *tam);
+    //printf("Transferencia de dados %d\n", *tam);
 
     //Abre ou criar o arquivo
     arquivo = init_arquivo("dados.txt");
@@ -209,7 +209,7 @@ void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
         (*tam)++;
         iaux++;
     }
-    printf("Terminou de ler o arquivo. O arquivo contem %d linhas\n", *tam);
+    //printf("Terminou de ler o arquivo. O arquivo contem %d linhas\n", *tam);
     //Fecha o arquivo
     fclose(arquivo);
     //Exclui o arquivo
@@ -227,7 +227,7 @@ FILE *init_arquivo(char nome[50]){
     arquivo = fopen(nome, "r+");
 
     if(arquivo == NULL){
-        printf("Nao ha um arquivo %s para salvar. Criando novo arquivo.\n", nome);
+        //printf("Nao ha um arquivo %s para salvar. Criando novo arquivo.\n", nome);
         //Cria um arquivo txt se não houver
         arquivo = fopen(nome, "w+");
         if(arquivo == NULL){
@@ -344,8 +344,10 @@ int main()
     //Transfere os dados do arquivo para o array
     transfere(arquivo, filmes, &tam, "dados.txt");
 
-    printf("Opcao: ");
-    scanf("%d", &op);
+    op = menu();
+
+    //printf("Opcao: ");
+    //scanf("%d", &op);
 
     switch(op){
 
@@ -376,9 +378,12 @@ int main()
             deletar(filmes, pos, &tam);
             objeto_para_arquivo(arquivo, filmes, tam);
             break;
+        case 3:
+            break;
     }
 
     printf("Fim do programa!!\n");
+
     getch();
     return 0;
 }
