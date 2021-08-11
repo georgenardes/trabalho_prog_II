@@ -61,12 +61,12 @@ Filme* linha_para_filme (char *linha) {
         sprintf(filme->diretor, "%s", ch);
     }
 
-    printf("fim\n");
-    printf("%s\n", filme->nome);
-    printf("%s\n", filme->genero);
-    printf("%d\n", (int)filme->ano);
-    printf("%.2f\n", filme->duracao);
-    printf("%s\n", filme->diretor);
+    // printf("fim\n");
+    // printf("%s\n", filme->nome);
+    // printf("%s\n", filme->genero);
+    // printf("%d\n", (int)filme->ano);
+    // printf("%.2f\n", filme->duracao);
+    // printf("%s\n", filme->diretor);
 
     return filme;
 }
@@ -122,7 +122,7 @@ void print_vector(Filme vetor[], int tam){
     return;
 }
 
-void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
+void transfere(FILE *arquivo, Filme dados[255], int *tam, char nome[50]){
 
     printf("Transferencia de dados %d\n", *tam);
 
@@ -131,9 +131,10 @@ void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
     int er;
 
     while(fgets(saux, 255, arquivo) != NULL){
-        printf("%s\n", saux);
+        // printf("%s\n", saux);
         dados[iaux] = *linha_para_filme(saux);
         (*tam)++;
+        iaux++;
     }
     printf("Terminou de ler o arquivo. O arquivo contem %d linhas\n", *tam);
     //fclose(arquivo);
@@ -162,6 +163,95 @@ FILE *init_arquivo(char nome[50]){
 
 }
 
+char* pesquisa_opcoes (int *op) {
+    char *string_pesquisa = malloc(sizeof(char) * 255);
+
+    printf("(1) Nome. (2) Genero. (3) Ano \n");
+    scanf("%d", op);
+
+    if (*op == 1)
+        printf("Digite o nome do filme: \n");
+    else if (*op == 2)
+        printf("Digite o genero do filme: \n");
+    else if (*op == 3)
+        printf("Digite o ano do filme: \n");
+    else
+        printf("Opcao invalida \n");
+
+    scanf("%s", string_pesquisa);
+    return string_pesquisa;
+}
+
+int* pesquisar (Filme filmes[], int tam, int op, const char string_pesquisa[255], int *num_encontrados) {
+    printf("%s ======= \n", string_pesquisa);
+
+    int counter = 0;
+    int *vet_indices;
+
+    /// verifica quantos filmes deram match
+    for (int i = 0; i < tam; i++){
+        /// opcao nome
+        if (op == 1) {
+            /// verifica se nome contem string_pesquisa
+            if (strstr(filmes[i].nome, string_pesquisa) != NULL){
+                counter++;
+            }
+        }
+        /// opcao genero
+        else if (op == 2){
+            /// verifica se genero contem string_pesquisa
+            if (strstr(filmes[i].genero, string_pesquisa) != NULL){
+                counter++;
+            }
+        }
+        /// opcao ano
+        else if (op == 3){
+            /// verifica se ano filme igual ano pesquisa
+            if (filmes[i].ano == (unsigned short) atoi(string_pesquisa)){
+                counter++;
+            }
+        }
+    }
+
+    if (counter <= 0)
+        return NULL;
+
+    /// aloca vetor de indice dos encontrados
+    vet_indices = malloc(sizeof(int) * counter);
+    counter = 0;
+
+    /// armazena os indices dos filmes que deram match
+    for (int i = 0; i < tam; i++){
+        /// opcao nome
+        if (op == 1) {
+            /// verifica se nome contem string_pesquisa
+            if (strstr(filmes[i].nome, string_pesquisa) != NULL){
+                vet_indices[counter] = i; // armazena indice do match
+                counter++;
+            }
+        }
+        /// opcao genero
+        else if (op == 2){
+            /// verifica se genero contem string_pesquisa
+            if (strstr(filmes[i].genero, string_pesquisa) != NULL){
+                vet_indices[counter] = i; // armazena indice do match
+                counter++;
+            }
+        }
+        /// opcao ano
+        else if (op == 3){
+            /// verifica se ano filme igual ano pesquisa
+            if (filmes[i].ano == (unsigned short) atoi(string_pesquisa)){
+                vet_indices[counter] = i; // armazena indice do match
+                counter++;
+            }
+        }
+    }
+    *num_encontrados = counter;
+    return vet_indices;
+}
+
+
 int main()
 {
 
@@ -171,41 +261,48 @@ int main()
     arquivo = init_arquivo("dados.txt");
     aux_arquivo = init_arquivo("auxiliar.txt");
 
-    int op = 0;
-    Filme dados[255];
+    int op = 1;
+    Filme filmes[255];
 
     //menu();
 
     int tam = 0;
-    //transfere(arquivo, aux_arquivo, "dados.txt");
-    transfere(arquivo, dados, &tam, "dados.txt");
+    // transfere(arquivo, aux_arquivo, "dados.txt");
+    transfere(arquivo, filmes, &tam, "dados.txt");
 
-    printf("Nome do filme: %s\n", dados[0].nome);
-
-    //print_vector(dados, tam);
-    //print_arq(arquivo);
-    //print_arq(aux_arquivo);
+    // printf("Nome do filme: %s\n", filmes[0].nome);
+    // print_vector(filmes, tam);
+    // print_arq(arquivo);
+    // print_arq(aux_arquivo);
 
     printf("Opcao: ");
     //scanf("%d", &op);
 
     switch(op){
+        case 0:
+            printf("Cadastrar\n");
+            cadastrar(aux_arquivo);
+            break;
+        case 1:
+            printf("Pesquisar\n");
+            int op_pesquisa;
+            char *string_pesquisa;
+            int num_encontrados; // quantidade de filmes encontrados
+            int *vet_indices; // vetor de indices dos filmes encontrados
 
-    case 0:
-        printf("Cadastrar\n");
-        cadastrar(aux_arquivo);
+            /// mostra as opções de pesquisa e retorna a string a
+            /// ser pesquisada e a opção selecionada
+            string_pesquisa = pesquisa_opcoes(&op_pesquisa);
 
-        break;
-    case 1:
-        printf("Opcao 2\n");
-        break;
+            /// pesquisa no vetor de filmes os filmes que
+            /// contem a string pesquisada
+            /// retorna um vetor de indices dos filmes que
+            /// deram match
+            vet_indices = pesquisar(filmes, tam, op_pesquisa, string_pesquisa, &num_encontrados);
+
+            printf("num_encontrados %d \n", num_encontrados);
+            break;
     }
-
-
-
-    char linha[] = "Nome;Genero;2000;2;Nolan";
-    Filme *filme = linha_para_filme(linha);
-    printf("linha %s\n", linha);
 
     // menu();
 
