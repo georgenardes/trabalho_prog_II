@@ -21,8 +21,8 @@ void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]);
 FILE *init_arquivo(char nome[50]);
 void objeto_para_arquivo(FILE *arquivo, Filme filmes[], int tam);
 
-//Função que recebe uma linha do arquivo de texto e transforma em uma variável do tipo Filme para armazenar as informações do filme
-//Recebe uma string que contem uma linha que estava no arquivo
+///Função que recebe uma linha do arquivo de texto e transforma em uma variável do tipo Filme para armazenar as informações do filme
+///Recebe uma string que contem uma linha que estava no arquivo
 Filme* linha_para_filme (char *linha) {
 
 
@@ -78,8 +78,8 @@ Filme* linha_para_filme (char *linha) {
 
     return filme;
 }
-//Função que recebe o array de obejtos do tipo Filme e escreve cada filme no arquivo de texto
-//Recebe um ponteiro do tipo FILE, o array de Filmes e o tamanho do array
+///Função que recebe o array de obejtos do tipo Filme e escreve cada filme no arquivo de texto
+///Recebe um ponteiro do tipo FILE, o array de Filmes e o tamanho do array
 void objeto_para_arquivo(FILE *arquivo, Filme filmes[], int tam){
 
     //Abre o arquivo ou cria se necessário
@@ -96,8 +96,8 @@ void objeto_para_arquivo(FILE *arquivo, Filme filmes[], int tam){
     fclose(arquivo);
 }
 
-//Função que insere um filme no array de filmes
-//Recebe o array de filmes e o tamanho do array
+///Função que insere um filme no array de filmes
+///Recebe o array de filmes e o tamanho do array
 void cadastrar(Filme filmes[], int *tam){
 
     char aux[255];
@@ -128,8 +128,8 @@ void cadastrar(Filme filmes[], int *tam){
 
     return;
 }
-//Função que remove do array de filmes
-//Recebe o array de Filmes, a posição que deseja ser deletada e tamanho do array
+///Função que remove do array de filmes
+///Recebe o array de Filmes, a posição que deseja ser deletada e tamanho do array
 void deletar(Filme filmes[], int pos, int *tam){
 
     //Se por acaso receber uma posição maior que o tamanho total de filmes
@@ -147,8 +147,8 @@ void deletar(Filme filmes[], int pos, int *tam){
     return;
 
 }
-//Função que Recebe uma string que contem as informações do filme e que será escrita em um arquivo
-//Recebe uma string com as informações e um ponteiro do tipo FILE
+///Função que Recebe uma string que contem as informações do filme e que será escrita em um arquivo
+///Recebe uma string com as informações e um ponteiro do tipo FILE
 void escrita(char filme[255], FILE *arquivo){
 
         int er;
@@ -162,7 +162,7 @@ void escrita(char filme[255], FILE *arquivo){
         }
 
 }
-//Auxiliar
+///Auxiliar
 void print_arq(FILE *arquivo){
 
 
@@ -172,7 +172,7 @@ void print_arq(FILE *arquivo){
         printf("%s\n", saux);
     }
 }
-//Auxiliar
+///Auxiliar
 void print_vector(Filme vetor[], int tam){
 
     printf("Filmes\n");
@@ -188,9 +188,10 @@ void print_vector(Filme vetor[], int tam){
     return;
 }
 
-//Função que copia os dados de um arquivo txt e passa para o array de Filmes para serem manipulados durante a execução do programa
-//Recebe um ponteiro do tipo FILE, o array do tipo Filme, o tamanho do array e o nome do arquivo que irá ser aberto
+///Função que copia os dados de um arquivo txt e passa para o array de Filmes para serem manipulados durante a execução do programa
+///Recebe um ponteiro do tipo FILE, o array do tipo Filme, o tamanho do array e o nome do arquivo que irá ser aberto
 void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
+
 
     printf("Transferencia de dados %d\n", *tam);
 
@@ -216,9 +217,10 @@ void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
 
     return;
 }
-//Função que abre o arquivo para leitura e escrita, se o arquivo não existir, ela irá criar
-//Recebe uma string com o nome do arquivo
+///Função que abre o arquivo para leitura e escrita, se o arquivo não existir, ela irá criar
+///Recebe uma string com o nome do arquivo
 FILE *init_arquivo(char nome[50]){
+
 
     FILE *arquivo;
     //Abre um arquivo txt
@@ -235,14 +237,10 @@ FILE *init_arquivo(char nome[50]){
     }
     return arquivo;
 }
-
-void busca(int op){
-
-
-
-}
-
+/// mostra as opções de pesquisa e retorna a string a ser pesquisada e a opção selecionada
+///
 char* pesquisa_opcoes (int *op) {
+
     char *string_pesquisa = malloc(sizeof(char) * 255);
 
     printf("(1) Nome. (2) Genero. (3) Ano \n");
@@ -260,7 +258,9 @@ char* pesquisa_opcoes (int *op) {
     scanf("%s", string_pesquisa);
     return string_pesquisa;
 }
-
+/// pesquisa no vetor de filmes os filmes que contem a string pesquisada
+/// retorna um vetor de indices dos filmes que deram match
+///
 int* pesquisar (Filme filmes[], int tam, int op, const char string_pesquisa[255], int *num_encontrados) {
     printf("%s ======= \n", string_pesquisa);
 
@@ -338,52 +338,45 @@ int main()
 
     int op = 0;
     //Array do tipo Filme que irá armazenar os filmes durante a execução do código
-    Filme dados[255];
+    Filme filmes[255];
     //Tamanho do array dados
     int tam = 0;
-
-
-
-    transfere(arquivo, dados, &tam, "dados.txt");
-    //cadastrar(dados, &tam);
-    deletar(dados, 3, &tam);
-
-    print_vector(dados, tam);
-
-    objeto_para_arquivo(arquivo, dados, tam);
-    //print_arq(arquivo);
-    //print_arq(aux_arquivo);
+    //Transfere os dados do arquivo para o array
+    transfere(arquivo, filmes, &tam, "dados.txt");
 
     printf("Opcao: ");
-    //scanf("%d", &op);
+    scanf("%d", &op);
 
     switch(op){
+
         case 0:
-            printf("Cadastrar\n");
-            cadastrar(aux_arquivo);
-            break;
-        case 1:
             printf("Pesquisar\n");
             int op_pesquisa;
             char *string_pesquisa;
             int num_encontrados; // quantidade de filmes encontrados
             int *vet_indices; // vetor de indices dos filmes encontrados
 
-            /// mostra as opções de pesquisa e retorna a string a
-            /// ser pesquisada e a opção selecionada
             string_pesquisa = pesquisa_opcoes(&op_pesquisa);
-
-            /// pesquisa no vetor de filmes os filmes que
-            /// contem a string pesquisada
-            /// retorna um vetor de indices dos filmes que
-            /// deram match
             vet_indices = pesquisar(filmes, tam, op_pesquisa, string_pesquisa, &num_encontrados);
 
             printf("num_encontrados %d \n", num_encontrados);
             break;
-    }
 
-    // menu();
+        case 1:
+            printf("Cadastrar\n");
+            cadastrar(filmes, &tam);
+            objeto_para_arquivo(arquivo, filmes, tam);
+            break;
+
+        case 2:
+            printf("Deletar\n");
+            printf("Qual posicao deseja deletar? ");
+            int pos;
+            scanf("%d", &pos);
+            deletar(filmes, pos, &tam);
+            objeto_para_arquivo(arquivo, filmes, tam);
+            break;
+    }
 
     printf("Fim do programa!!\n");
     getch();
