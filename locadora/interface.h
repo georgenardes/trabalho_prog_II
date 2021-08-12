@@ -379,6 +379,9 @@ int menu_busca(){
         gotoxy(25, 9);
         printf("Ano");
 
+        gotoxy(25, 11);
+        printf("Mostrar Todos");
+
         gotoxy(25, 14);
         printf("Exit");
 
@@ -398,9 +401,14 @@ int menu_busca(){
                 printf("Ano");
                 break;
             case 3:
+                gotoxy(25, 11);
+                printf("Mostrar Todos");
+                break;
+            case 4:
                 gotoxy(25, 14);
                 printf("Exit");
                 break;
+
         }
         textcolor(WHITE, BLACK);
 
@@ -413,16 +421,18 @@ int menu_busca(){
                     aux--;
                 break;
             case 80:
-                if (aux != 3)
+                if (aux != 4)
                     aux++;
                 break;
         }
 
         if (tecla == 13) //Verifica se enter foi pressionado, caso sim, retorna um valor
         {
-            gotoxy(35,yi+(aux*2));
-            printf(":");
-            gotoxy(36,yi+(aux*2));
+            if (aux != 3){
+                gotoxy(35,yi+(aux*2));
+                printf(":");
+                gotoxy(36,yi+(aux*2));
+            }
             return aux;
         }
 

@@ -3,15 +3,7 @@
 #include <stdlib.h>
 #include "interface.h"
 
-/*
-typedef struct {
-    char nome[80];
-    char genero[25];
-    unsigned short ano; // 16 bits
-    float duracao;
-    char diretor[100];
-} Filme;
-*/
+
 void print_vector(Filme vetor[], int tam);
 void print_arq(FILE *arquivo);
 void escrita(char filme[255], FILE *arquivo);
@@ -140,6 +132,7 @@ void deletar(Filme filmes[], int pos, int *tam){
     return;
 
 }
+
 ///Função que Recebe uma string que contem as informações do filme e que será escrita em um arquivo
 ///Recebe uma string com as informações e um ponteiro do tipo FILE
 void escrita(char filme[255], FILE *arquivo){
@@ -155,31 +148,7 @@ void escrita(char filme[255], FILE *arquivo){
         }
 
 }
-///Auxiliar
-void print_arq(FILE *arquivo){
 
-
-    printf("Conteudo do arquivo: \n");
-    char saux[255];
-    while(fgets(saux, 255, arquivo) != NULL){
-        printf("%s\n", saux);
-    }
-}
-///Auxiliar
-void print_vector(Filme vetor[], int tam){
-
-    printf("Filmes\n");
-    for(int i = 0; i<tam; i++){
-        printf("Info do filme %s\n", vetor[i].nome);
-        printf("%s\n", vetor[i].genero);
-        printf("%d\n", (int)vetor[i].ano);
-        printf("%f\n", vetor[i].duracao);
-        printf("%s\n", vetor[i].diretor);
-        printf("\n");
-    }
-
-    return;
-}
 
 ///Função que copia os dados de um arquivo txt e passa para o array de Filmes para serem manipulados durante a execução do programa
 ///Recebe um ponteiro do tipo FILE, o array do tipo Filme, o tamanho do array e o nome do arquivo que irá ser aberto
@@ -210,6 +179,7 @@ void transfere_filme(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
 
     return;
 }
+
 
 void transfere_adm(FILE *arquivo, Admin adms[], int *tam, char nome[50]){
 
@@ -255,6 +225,7 @@ FILE *init_arquivo(char nome[50]){
     }
     return arquivo;
 }
+
 /// mostra as opções de pesquisa e retorna a string a ser pesquisada e a opção selecionada
 ///
 char* pesquisa_opcoes (int *op) {
@@ -276,12 +247,25 @@ char* pesquisa_opcoes (int *op) {
     scanf("%s", string_pesquisa);
     return string_pesquisa;
 }
+
 /// pesquisa no vetor de filmes os filmes que contem a string pesquisada
 /// retorna um vetor de indices dos filmes que deram match
 ///
 int* pesquisar (Filme filmes[], int tam, int op, const char string_pesquisa[255], int *num_encontrados) {
     int counter = 0;
     int *vet_indices;
+
+    /// mostrar todos
+    if (op == 3) {
+        vet_indices = malloc(sizeof(int) * tam);
+
+        for (int i = 0; i < tam; i++){
+            vet_indices[i] = i;
+        }
+        *num_encontrados = tam;
+        return vet_indices;
+    }
+
 
     /// verifica quantos filmes deram match
     for (int i = 0; i < tam; i++){
@@ -376,6 +360,7 @@ int main()
         switch(op){
 
             case 0:///Pesquisa filmes
+
                 do {
                     char string_pesquisa[255]; // string a ser pesquisada
                     int num_encontrados = 0;       // quantidade de filmes encontrados
@@ -384,12 +369,15 @@ int main()
 
                     /// menu de busca
                     op_pesquisa = menu_busca();
-                    if (op_pesquisa == 3){ // exit
+                    if (op_pesquisa == 4){ // exit
                         break;
                     }
 
-                    /// recebe string de pesquisa
-                    scanf("%s", &string_pesquisa);
+                    if (op_pesquisa < 3){
+                        /// recebe string de pesquisa
+                        scanf("%s", &string_pesquisa);
+                    }
+
 
                     /// realiza pesquisa no vetor de filme
                     vet_indices = pesquisar(filmes, tam_filme, op_pesquisa, string_pesquisa, &num_encontrados);
@@ -424,12 +412,14 @@ int main()
 
                         /// menu de busca
                         op_pesquisa = menu_busca();
-                        if (op_pesquisa == 3){ // exit
+                        if (op_pesquisa == 4){ // exit
                             break;
                         }
 
-                        /// recebe string de pesquisa
-                        scanf("%s", &string_pesquisa);
+                        if (op_pesquisa < 3){
+                            /// recebe string de pesquisa
+                            scanf("%s", &string_pesquisa);
+                        }
 
                         do {
                             /// realiza pesquisa no vetor de filme

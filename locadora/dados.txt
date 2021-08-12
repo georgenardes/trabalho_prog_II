@@ -1,7 +1,5 @@
-A xicara 2;drama2;2002;2.00;Luiz
-A xicara;drama;2000;2.00;Luiz
-
-;(null);0;0.00;(null);0;0;0.00;0trabalho;acao;2020;2.00;luiz
-trabalho;acao;2020;2.00;luiz
-ad;ad;20;3.00;da
-020;2.00;0;0.00;ad;ad;20;3.00;da
+A xicara;drama;2000;2.00;Gabriel
+A xicara 2;drama;2002;2.00;Gabriel
+A xicara 3;drama;2004;2.00;Gabriel
+A xicara 4;drama;2006;2.00;Gabriel
+A xicara 5;drama;2008;2.00;Gabriel
