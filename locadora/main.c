@@ -25,8 +25,6 @@ void objeto_para_arquivo(FILE *arquivo, Filme filmes[], int tam);
 ///Função que recebe uma linha do arquivo de texto e transforma em uma variável do tipo Filme para armazenar as informações do filme
 ///Recebe uma string que contem uma linha que estava no arquivo
 Filme* linha_para_filme (char *linha) {
-
-
     // Aloca memória para a variável filme
     Filme *filme = malloc(sizeof(Filme));
 
@@ -103,8 +101,6 @@ void cadastrar(Filme filmes[], int *tam){
 
     char aux[255];
     if(*tam<255){
-
-
         Filme *filme = malloc(sizeof(Filme));
         printf("Digite o nome do filme: ");
         scanf("%s", &filme->nome);
@@ -354,43 +350,37 @@ int main()
 
         switch(op){
 
-            case 0:{
-                char string_pesquisa[255]; // string a ser pesquisada
-                int num_encontrados = 0;       // quantidade de filmes encontrados
-                int *vet_indices;          // vetor de indices dos filmes encontrados
-                int filme_selecionado = -1;
+            case 0:
+                do {
+                    char string_pesquisa[255]; // string a ser pesquisada
+                    int num_encontrados = 0;       // quantidade de filmes encontrados
+                    int *vet_indices;          // vetor de indices dos filmes encontrados
+                    int filme_selecionado = -1;
 
-                /// menu de busca
-                op_pesquisa = menu_busca();
-                if (op_pesquisa == 3){ // exit
-                    break;
-                }
+                    /// menu de busca
+                    op_pesquisa = menu_busca();
+                    if (op_pesquisa == 3){ // exit
+                        break;
+                    }
 
-                /// recebe string de pesquisa
-                scanf("%s", &string_pesquisa);
+                    /// recebe string de pesquisa
+                    scanf("%s", &string_pesquisa);
 
-                /// realiza pesquisa no vetor de filme
-                vet_indices = pesquisar(filmes, tam, op_pesquisa, string_pesquisa, &num_encontrados);
+                    /// realiza pesquisa no vetor de filme
+                    vet_indices = pesquisar(filmes, tam, op_pesquisa, string_pesquisa, &num_encontrados);
 
-                /// exibe resultados
-                filme_selecionado = mostra_filmes(filmes, tam, vet_indices, num_encontrados);
+                    do {
+                        /// exibe resultados
+                        filme_selecionado = mostra_filmes(filmes, tam, vet_indices, num_encontrados);
 
-                /// exibe info do filme selecionado
-                if (filme_selecionado != -1){
-                    /**
+                        /// exibe info do filme selecionado
+                        if (filme_selecionado != -1){
+                            mostra_info(filmes[filme_selecionado]);
+                        }
+                    } while (filme_selecionado != -1);
 
-                    Aqui deve ser mostrado a informação do filme selecionado.
-                    Ex.:
-
-                    mostra_filme(filmes[filme_selecionado]);
-
-                    Verificar como ficará a exibição no console
-                    */
-
-                }
-
+                } while (op_pesquisa != 3);
                 break;
-            }
             case 1:
                 printf("Cadastrar\n");
                 cadastrar(filmes, &tam);
@@ -411,7 +401,6 @@ int main()
                 getch();
                 break;
         }
-
         system("cls");
     } while (op != 3);
 

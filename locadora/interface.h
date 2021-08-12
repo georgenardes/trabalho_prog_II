@@ -86,6 +86,7 @@ void desenha_coluna(int xi, int yi, int y){
 int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados){
 
     desenha_coluna(48, 0, 29);
+    limpa_bloco(50, 110, 5, 25);
 
     int xi = 50, yi = 5;
     int tecla, aux = 0, auy = 0;
@@ -93,14 +94,17 @@ int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados
 
     if (num_encontrados <= 0){
         textcolor(BRIGHTWHITE, BLACK);
+
         gotoxy(xi,yi+(aux*2));
         printf("Nenhum filme encontrado!");
+
         tecla = _getch();
+        limpa_bloco(50, 110, 5, 25);
         return -1;
     }
 
 
-    do{
+    do {
         textcolor(BRIGHTWHITE, BLACK);
 
         // mostra todos filmes encontrados
@@ -116,18 +120,17 @@ int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados
         gotoxy(xi+40,yi+(num_encontrados*2));
         printf("Exit");
 
-        // destaca filme selecionado
+        // destaca opcao selecionada
         textcolor(BLACK, WHITE);
-        if (auy == 0){
+        if (num_encontrados == aux){ // exit option
+            gotoxy(xi+40,yi+(aux*2));
+            printf("Exit");
+        } else {                    // filme[aux]
             gotoxy(xi,yi+(aux*2));
             printf("%s",filmes[vet_indices[aux]].nome);
-        } else {
+
             gotoxy(xi+40,yi+(aux*2));
-            if (num_encontrados == aux){ // exit option
-                printf("Exit");
-            } else {
-                printf("INFO");
-            }
+            printf("INFO");
         }
 
         textcolor(WHITE, BLACK);
@@ -160,6 +163,8 @@ int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados
         }
         if (tecla == 13) //Verifica se enter foi pressionado, caso sim, retorna um valor
         {
+            limpa_bloco(50, 110, 5, 25);
+
             if (aux == num_encontrados)
                 return -1;
 
@@ -167,14 +172,63 @@ int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados
             return vet_indices[aux];
         }
 
-    }while (tecla != 13);
+    } while (tecla != 13);
 
     return -1;
 }
 
+// limpa parte do console (x inicial, x final, y inicial, y final)
+void limpa_bloco (int xi, int xf, int yi, int yf){
+    textcolor(BRIGHTWHITE, BLACK);
+
+    for(int i = xi; i < xf; i++){
+        for (int j = yi; j < yf; j++){
+            gotoxy(i,j);
+            printf(" ");
+        }
+    }
+}
+
+
+void mostra_info (Filme filme){
+    int xi = 50, yi = 5;
+
+    // limpa parte para escrever info
+    limpa_bloco(50, 110, 5, 20);
+
+    gotoxy(xi,yi++);
+    printf("Info.");
+    gotoxy(xi,yi++);
+    printf("Nome: %s", filme.nome);
+    gotoxy(xi,yi++);
+    printf("Genero: %s", filme.genero);
+    gotoxy(xi,yi++);
+    printf("Ano: %d", (int)filme.ano);
+    gotoxy(xi,yi++);
+    printf("Duracao: %.2f", filme.duracao);
+    gotoxy(xi,yi++);
+    printf("Diretor: %s", filme.diretor);
+    gotoxy(xi,yi++);
+
+    // divisao
+    for (int j = 0; j < 50; j++)
+        printf("=");
+
+    getch();
+
+    // limpa parte escrita
+    limpa_bloco(50, 110, 5, 20);
+}
+
+
+
 int menu_busca(){
 
     int tecla, aux = 0, yi = 5;
+
+    // limpa bloco para escrever opções
+    limpa_bloco(25, 48, 5, 14);
+
     do{
         textcolor(BRIGHTWHITE, BLACK);
         gotoxy(25, 5);
@@ -224,6 +278,7 @@ int menu_busca(){
                     aux++;
                 break;
         }
+
         if (tecla == 13) //Verifica se enter foi pressionado, caso sim, retorna um valor
         {
             gotoxy(35,yi+(aux*2));
@@ -240,7 +295,7 @@ int menu_busca(){
 
 int menu(){
 
-    desenha_borda(0,0, 118, 29);
+    desenha_borda(0, 0, 118, 29);
     desenha_coluna(20, 0, 29 );
 
     int tecla, aux = 0;
