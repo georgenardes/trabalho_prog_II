@@ -344,56 +344,76 @@ int main()
     //Transfere os dados do arquivo para o array
     transfere(arquivo, filmes, &tam, "dados.txt");
 
-    // solicita opção para o usuario
-    op = menu();
+    do {
 
-    // salva filmes
-    objeto_para_arquivo(arquivo, filmes, tam);
+        // solicita opção para o usuario
+        op = menu();
 
-    switch(op){
+        // salva filmes
+        objeto_para_arquivo(arquivo, filmes, tam);
 
-        case 0:{
-            char string_pesquisa[255]; // string a ser pesquisada
-            int num_encontrados = 0;       // quantidade de filmes encontrados
-            int *vet_indices;          // vetor de indices dos filmes encontrados
+        switch(op){
 
-            /// menu de busca
-            op_pesquisa = menu_busca();
-            if (op_pesquisa == 3){ // exit
+            case 0:{
+                char string_pesquisa[255]; // string a ser pesquisada
+                int num_encontrados = 0;       // quantidade de filmes encontrados
+                int *vet_indices;          // vetor de indices dos filmes encontrados
+                int filme_selecionado = -1;
+
+                /// menu de busca
+                op_pesquisa = menu_busca();
+                if (op_pesquisa == 3){ // exit
+                    break;
+                }
+
+                /// recebe string de pesquisa
+                scanf("%s", &string_pesquisa);
+
+                /// realiza pesquisa no vetor de filme
+                vet_indices = pesquisar(filmes, tam, op_pesquisa, string_pesquisa, &num_encontrados);
+
+                /// exibe resultados
+                filme_selecionado = mostra_filmes(filmes, tam, vet_indices, num_encontrados);
+
+                /// exibe info do filme selecionado
+                if (filme_selecionado != -1){
+                    /**
+
+                    Aqui deve ser mostrado a informação do filme selecionado.
+                    Ex.:
+
+                    mostra_filme(filmes[filme_selecionado]);
+
+                    Verificar como ficará a exibição no console
+                    */
+
+                }
+
                 break;
             }
+            case 1:
+                printf("Cadastrar\n");
+                cadastrar(filmes, &tam);
+                objeto_para_arquivo(arquivo, filmes, tam);
+                break;
 
-            /// recebe string de pesquisa
-            scanf("%s", &string_pesquisa);
-
-            // string_pesquisa = pesquisa_opcoes(&op_pesquisa);
-            vet_indices = pesquisar(filmes, tam, op_pesquisa, string_pesquisa, &num_encontrados);
-
-            //system("cls");
-            mostra_filmes(filmes, tam, vet_indices, num_encontrados);
-
-            break;
+            case 2:
+                printf("Deletar\n");
+                printf("Qual posicao deseja deletar? ");
+                int pos;
+                scanf("%d", &pos);
+                deletar(filmes, pos, &tam);
+                objeto_para_arquivo(arquivo, filmes, tam);
+                break;
+            case 3:
+                system("cls");
+                printf("\nFim do programa!!\n");
+                getch();
+                break;
         }
-        case 1:
-            printf("Cadastrar\n");
-            cadastrar(filmes, &tam);
-            objeto_para_arquivo(arquivo, filmes, tam);
-            break;
 
-        case 2:
-            printf("Deletar\n");
-            printf("Qual posicao deseja deletar? ");
-            int pos;
-            scanf("%d", &pos);
-            deletar(filmes, pos, &tam);
-            objeto_para_arquivo(arquivo, filmes, tam);
-            break;
-        case 3:
-            break;
-    }
+        system("cls");
+    } while (op != 3);
 
-    printf("\nFim do programa!!\n");
-
-    getch();
     return 0;
 }

@@ -82,20 +82,21 @@ void desenha_coluna(int xi, int yi, int y){
 
 }
 
-//Mostra o nome dos filmes
-void mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados){
+//Mostra o nome dos filmes e opcão de info (retorna o indice do filme selecionado)
+int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados){
 
     desenha_coluna(48, 0, 29);
 
     int xi = 50, yi = 5;
-    int tecla, aux = 0;
+    int tecla, aux = 0, auy = 0;
 
 
     if (num_encontrados <= 0){
         textcolor(BRIGHTWHITE, BLACK);
         gotoxy(xi,yi+(aux*2));
         printf("Nenhum filme encontrado!");
-        return;
+        tecla = _getch();
+        return -1;
     }
 
 
@@ -104,31 +105,70 @@ void mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrado
 
         // mostra todos filmes encontrados
         for(int i = 0; i < num_encontrados; i++){
-            gotoxy(xi,yi+(i*2)); printf("%s",filmes[vet_indices[i]].nome);
+            gotoxy(xi,yi+(i*2));
+            printf("%s",filmes[vet_indices[i]].nome);
+
+            gotoxy(xi+40,yi+(i*2));
+            printf("INFO");
         }
 
+        // saida
+        gotoxy(xi+40,yi+(num_encontrados*2));
+        printf("Exit");
+
+        // destaca filme selecionado
         textcolor(BLACK, WHITE);
-        gotoxy(xi,yi+(aux*2));
-        printf("%s",filmes[vet_indices[aux]].nome);
+        if (auy == 0){
+            gotoxy(xi,yi+(aux*2));
+            printf("%s",filmes[vet_indices[aux]].nome);
+        } else {
+            gotoxy(xi+40,yi+(aux*2));
+            if (num_encontrados == aux){ // exit option
+                printf("Exit");
+            } else {
+                printf("INFO");
+            }
+        }
+
         textcolor(WHITE, BLACK);
 
         tecla = _getch();
 
         switch (tecla) //Funcionamento da selecao das opcoes
         {
+            // esquerda
+            case 75:
+                if (auy != 0)
+                    auy--;
+                break;
+            // direita
+            case 77:
+                if (auy != 1)
+                    auy++;
+                break;
+            // cima
             case 72:
                 if (aux != 0)
                     aux--;
                 break;
+
+            // baixo
             case 80:
-                if (aux != num_encontrados-1)
+                if (aux != num_encontrados)
                     aux++;
                 break;
         }
         if (tecla == 13) //Verifica se enter foi pressionado, caso sim, retorna um valor
-            return aux;
+        {
+            if (aux == num_encontrados)
+                return -1;
+
+            /// retorna indice do filme selecionado
+            return vet_indices[aux];
+        }
 
     }while (tecla != 13);
+
     return -1;
 }
 
