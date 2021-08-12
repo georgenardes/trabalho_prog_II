@@ -263,29 +263,27 @@ char* pesquisa_opcoes (int *op) {
 /// retorna um vetor de indices dos filmes que deram match
 ///
 int* pesquisar (Filme filmes[], int tam, int op, const char string_pesquisa[255], int *num_encontrados) {
-    printf("%s ======= \n", string_pesquisa);
-
     int counter = 0;
     int *vet_indices;
 
     /// verifica quantos filmes deram match
     for (int i = 0; i < tam; i++){
         /// opcao nome
-        if (op == 1) {
+        if (op == 0) {
             /// verifica se nome contem string_pesquisa
             if (strstr(filmes[i].nome, string_pesquisa) != NULL){
                 counter++;
             }
         }
         /// opcao genero
-        else if (op == 2){
+        else if (op == 1){
             /// verifica se genero contem string_pesquisa
             if (strstr(filmes[i].genero, string_pesquisa) != NULL){
                 counter++;
             }
         }
         /// opcao ano
-        else if (op == 3){
+        else if (op == 2){
             /// verifica se ano filme igual ano pesquisa
             if (filmes[i].ano == (unsigned short) atoi(string_pesquisa)){
                 counter++;
@@ -303,7 +301,7 @@ int* pesquisar (Filme filmes[], int tam, int op, const char string_pesquisa[255]
     /// armazena os indices dos filmes que deram match
     for (int i = 0; i < tam; i++){
         /// opcao nome
-        if (op == 1) {
+        if (op == 0) {
             /// verifica se nome contem string_pesquisa
             if (strstr(filmes[i].nome, string_pesquisa) != NULL){
                 vet_indices[counter] = i; // armazena indice do match
@@ -311,7 +309,7 @@ int* pesquisar (Filme filmes[], int tam, int op, const char string_pesquisa[255]
             }
         }
         /// opcao genero
-        else if (op == 2){
+        else if (op == 1){
             /// verifica se genero contem string_pesquisa
             if (strstr(filmes[i].genero, string_pesquisa) != NULL){
                 vet_indices[counter] = i; // armazena indice do match
@@ -319,7 +317,7 @@ int* pesquisar (Filme filmes[], int tam, int op, const char string_pesquisa[255]
             }
         }
         /// opcao ano
-        else if (op == 3){
+        else if (op == 2){
             /// verifica se ano filme igual ano pesquisa
             if (filmes[i].ano == (unsigned short) atoi(string_pesquisa)){
                 vet_indices[counter] = i; // armazena indice do match
@@ -338,7 +336,7 @@ int main()
     FILE *arquivo;
 
     int op = 3;
-    int op_busca = 0;
+    int op_pesquisa = 0;
     //Array do tipo Filme que irá armazenar os filmes durante a execução do código
     Filme filmes[255];
     //Tamanho do array dados
@@ -346,31 +344,36 @@ int main()
     //Transfere os dados do arquivo para o array
     transfere(arquivo, filmes, &tam, "dados.txt");
 
+    // solicita opção para o usuario
     op = menu();
-    op_busca = menu_busca();
-    //system("cls");
-    mostra_filmes(filmes, tam);
+
+    // salva filmes
     objeto_para_arquivo(arquivo, filmes, tam);
-
-
-    //printf("Opcao: ");
-    //scanf("%d", &op);
 
     switch(op){
 
-        case 0:
-            printf("Pesquisar\n");
-            int op_pesquisa;
-            char *string_pesquisa;
-            int num_encontrados; // quantidade de filmes encontrados
-            int *vet_indices; // vetor de indices dos filmes encontrados
+        case 0:{
+            char string_pesquisa[255]; // string a ser pesquisada
+            int num_encontrados = 0;       // quantidade de filmes encontrados
+            int *vet_indices;          // vetor de indices dos filmes encontrados
 
-            string_pesquisa = pesquisa_opcoes(&op_pesquisa);
+            /// menu de busca
+            op_pesquisa = menu_busca();
+            if (op_pesquisa == 3){ // exit
+                break;
+            }
+
+            /// recebe string de pesquisa
+            scanf("%s", &string_pesquisa);
+
+            // string_pesquisa = pesquisa_opcoes(&op_pesquisa);
             vet_indices = pesquisar(filmes, tam, op_pesquisa, string_pesquisa, &num_encontrados);
 
-            printf("num_encontrados %d \n", num_encontrados);
-            break;
+            //system("cls");
+            mostra_filmes(filmes, tam, vet_indices, num_encontrados);
 
+            break;
+        }
         case 1:
             printf("Cadastrar\n");
             cadastrar(filmes, &tam);
