@@ -29,6 +29,13 @@ typedef struct {
     char diretor[100];
 } Filme;
 
+typedef struct{
+
+    char usuario[50];
+    char senha[10];
+
+} Admin;
+
 
 //Esconde o cursor no cmd
 void hidecursor()
@@ -83,14 +90,13 @@ void desenha_coluna(int xi, int yi, int y){
 }
 
 //Mostra o nome dos filmes e opcão de info (retorna o indice do filme selecionado)
-int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados){
+int mostra_filmes(Filme filmes[], int tam, int op, int *vet_indices, int num_encontrados){
 
     desenha_coluna(48, 0, 29);
     limpa_bloco(50, 110, 5, 25);
 
     int xi = 50, yi = 5;
     int tecla, aux = 0, auy = 0;
-
 
     if (num_encontrados <= 0){
         textcolor(BRIGHTWHITE, BLACK);
@@ -113,7 +119,11 @@ int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados
             printf("%s",filmes[vet_indices[i]].nome);
 
             gotoxy(xi+40,yi+(i*2));
-            printf("INFO");
+            if(op == 0 ){
+                printf("INFO");
+            }else{
+                printf("DELETAR");
+            }
         }
 
         // saida
@@ -130,7 +140,11 @@ int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados
             printf("%s",filmes[vet_indices[aux]].nome);
 
             gotoxy(xi+40,yi+(aux*2));
-            printf("INFO");
+            if(op == 0 ){
+                printf("INFO");
+            }else{
+                printf("DELETAR");
+            }
         }
 
         textcolor(WHITE, BLACK);
@@ -177,6 +191,134 @@ int mostra_filmes(Filme filmes[], int tam, int *vet_indices, int num_encontrados
     return -1;
 }
 
+///Função que insere um filme no array de filmes
+///Recebe o array de filmes e o tamanho do array
+void cadastrar(Filme filmes[], int *tam){
+
+    char aux[255];
+    int auy = 0, tecla = 0;
+    if(*tam<255){
+        Filme *filme = malloc(sizeof(Filme));
+        gotoxy(25, 5);
+        printf("Digite o nome do filme: ");
+        scanf("%s", &filme->nome);
+        gotoxy(25,6);
+        printf("Digite o genero do filme: ");
+        scanf("%s", &filme->genero);
+        gotoxy(25,7);
+        printf("Digite o ano do filme: ");
+        scanf("%hu", &filme->ano);
+        gotoxy(25,8);
+        printf("Digite a duracao do filme: ");
+        scanf("%f", &filme->duracao);
+        gotoxy(25,9);
+        printf("Digite o diretor do filme: ");
+        scanf("%s", &aux);
+        sprintf(filme->diretor, "%s\n", aux);
+
+        do{
+            textcolor(BRIGHTWHITE, BLACK);
+            gotoxy(25,11);
+            printf("Confirmar?");
+
+            gotoxy(25, 13);
+            printf("Sim");
+
+            gotoxy(31, 13);
+            printf("Nao");
+
+            textcolor(BLACK, WHITE);
+            switch (auy)
+            {
+                case 0:
+                    gotoxy(25, 13);
+                    printf("Sim");
+                    break;
+                case 1:
+                    gotoxy(31, 13);
+                    printf("Nao");
+                    break;
+            }
+            textcolor(WHITE, BLACK);
+
+            tecla = _getch();
+
+            switch (tecla) //Funcionamento da selecao das opcoes
+            {
+                // esquerda
+                case 75:
+                    if (auy != 0)
+                        auy--;
+                    break;
+                // direita
+                case 77:
+                    if (auy != 1)
+                        auy++;
+                    break;
+            }
+
+            if (tecla == 13) //Verifica se enter foi pressionado, caso sim, retorna um valor
+            {
+                if(auy == 0){
+                    filmes[*tam] = *filme;
+                    (*tam)++;
+                    gotoxy(25, 15);
+                    printf("Cadastro confirmado!!");
+                    Sleep(1000);
+                }else{
+                    gotoxy(25, 12);
+                    printf("Cadastro cancelado!!");
+                    Sleep(1000);
+                }
+            }
+
+        }while (tecla != 13);
+
+
+        return;
+
+    }else{
+        gotoxy(25,5);
+        printf("Limite de filmes cadastrados atingido: %d de %d filmes cadastrados\n", *tam, 255);
+        Sleep(3000);
+        return;
+    }
+
+
+}
+
+int autenticacao(Admin adms[], int tam){
+
+    char usuario[50];
+    char senha[10];
+
+    gotoxy(25, 5);
+    printf("Usuario:");
+    scanf("%s", &usuario);
+    gotoxy(25, 7);
+    printf("Senha:");
+    scanf("%s", &senha);
+
+    for(int i = 0; i < tam; i++){
+        if(strcmp(adms[i].usuario, usuario) == 0 && strcmp(adms[i].senha, senha) == 0){
+            gotoxy(25, 11);
+            gotoxy(25, 11);
+            printf("Usuario encontrado");
+            Sleep(500);
+            limpa_bloco(23, 50, 3, 20);
+            return 1;
+        }
+    }
+
+    gotoxy(25, 10);
+    gotoxy(25, 10);
+    printf("Usuario nao encontrado");
+    Sleep(1000);
+    limpa_bloco(24, 40, 3, 12);
+    return 0;
+
+}
+
 // limpa parte do console (x inicial, x final, y inicial, y final)
 void limpa_bloco (int xi, int xf, int yi, int yf){
     textcolor(BRIGHTWHITE, BLACK);
@@ -188,7 +330,6 @@ void limpa_bloco (int xi, int xf, int yi, int yf){
         }
     }
 }
-
 
 void mostra_info (Filme filme){
     int xi = 50, yi = 5;
@@ -219,8 +360,6 @@ void mostra_info (Filme filme){
     // limpa parte escrita
     limpa_bloco(50, 110, 5, 20);
 }
-
-
 
 int menu_busca(){
 
