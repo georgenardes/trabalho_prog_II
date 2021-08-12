@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "interface.h"
 
+/*
 typedef struct {
     char nome[80];
     char genero[25];
@@ -10,7 +11,7 @@ typedef struct {
     float duracao;
     char diretor[100];
 } Filme;
-
+*/
 void print_vector(Filme vetor[], int tam);
 void print_arq(FILE *arquivo);
 void escrita(char filme[255], FILE *arquivo);
@@ -203,7 +204,7 @@ void transfere(FILE *arquivo, Filme dados[], int *tam, char nome[50]){
     int er;
     //Enquanto não chegar ao fim do arquivo continua lendo linha por linha
     while(fgets(saux, 255, arquivo) != NULL){
-        printf("%d %s\n", *tam, saux);
+        //printf("%d %s\n", *tam, saux);
         //Converte a linha para uma variavel e insere no array
         dados[*tam] = *linha_para_filme(saux);
         (*tam)++;
@@ -336,7 +337,8 @@ int main()
     //Variável que irá receber o arquivo
     FILE *arquivo;
 
-    int op = 0;
+    int op = 3;
+    int op_busca = 0;
     //Array do tipo Filme que irá armazenar os filmes durante a execução do código
     Filme filmes[255];
     //Tamanho do array dados
@@ -345,6 +347,11 @@ int main()
     transfere(arquivo, filmes, &tam, "dados.txt");
 
     op = menu();
+    op_busca = menu_busca();
+    //system("cls");
+    mostra_filmes(filmes, tam);
+    objeto_para_arquivo(arquivo, filmes, tam);
+
 
     //printf("Opcao: ");
     //scanf("%d", &op);
@@ -382,7 +389,7 @@ int main()
             break;
     }
 
-    printf("Fim do programa!!\n");
+    printf("\nFim do programa!!\n");
 
     getch();
     return 0;

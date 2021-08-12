@@ -21,6 +21,15 @@
 #define LIGHTYELLOW  14
 #define BRIGHTWHITE  15
 
+typedef struct {
+    char nome[80];
+    char genero[25];
+    unsigned short ano; // 16 bits
+    float duracao;
+    char diretor[100];
+} Filme;
+
+
 //Esconde o cursor no cmd
 void hidecursor()
 {
@@ -44,7 +53,7 @@ void textcolor(int text, int background)
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (WORD) (text | background<<4));
 }
 
-void drawBox(int xi, int yi, int x, int y){ // FUNÇÃO PARA DESENHAR PAREDES
+void desenha_borda(int xi, int yi, int x, int y){ // FUNÇÃO PARA DESENHAR PAREDES
     int h, l; // VARIAVEL AUXILIAR DE DESENHO
     for(l=0;l<x;l++)   // DESENHA PAREDE HORIZONTAL
     {
@@ -64,12 +73,149 @@ void drawBox(int xi, int yi, int x, int y){ // FUNÇÃO PARA DESENHAR PAREDES
     gotoxy(xi+x, yi+y); printf("%c",188); ///inferior
 }
 
-int menu()
-{
-    drawBox(0,0, 118, 29);
+void desenha_coluna(int xi, int yi, int y){
+    int h;
+    for(h=1;h<y;h++)   // DESENHA PAREDE VERTICAL
+    {
+        gotoxy(xi,yi+h); printf("%c",186);
+    }
+
+}
+
+//Mostra o nome dos filmes
+void mostra_filmes(Filme filmes[], int tam){
+
+    int xi = 50, yi = 5;
+    int tecla, aux = 0;
+
+    do{
+
+        textcolor(BRIGHTWHITE, BLACK);
+        for(int i = 0; i < tam; i++){
+            gotoxy(xi,yi+(i*2)); printf("%s",filmes[i].nome);
+        }
+        textcolor(BLACK, WHITE);
+        ///Teria que fazer um case pra cada filme, mas a gente não sabe quantos filmes vão ter no momento. Tem que ver outra forma.
+        switch (aux)
+        {
+            case 0:
+                gotoxy(xi,yi+(aux*2));
+                printf("%s",filmes[aux].nome);
+                break;
+            case 1:
+                gotoxy(xi,yi+(aux*2));
+                printf("%s",filmes[aux].nome);
+                break;
+            case 2:
+                gotoxy(xi,yi+(aux*2));
+                printf("%s",filmes[aux].nome);
+                break;
+            case 3:
+                gotoxy(xi,yi+(aux*2));
+                printf("%s",filmes[aux].nome);
+                break;
+            case 4:
+                gotoxy(xi,yi+(aux*2));
+                printf("%s",filmes[aux].nome);
+                break;
+            case 5:
+                gotoxy(xi,yi+(aux*2));
+                printf("%s",filmes[aux].nome);
+                break;
+        }
+        textcolor(WHITE, BLACK);
+
+        tecla = _getch();
+
+        switch (tecla) //Funcionamento da selecao das opcoes
+        {
+            case 72:
+                if (aux != 0)
+                    aux--;
+                break;
+            case 80:
+                if (aux != tam-1)
+                    aux++;
+                break;
+        }
+        if (tecla == 13) //Verifica se enter foi pressionado, caso sim, retorna um valor
+            return aux;
+    }while (tecla != 13);
+    return -1;
+
+
+}
+
+int menu_busca(){
+
     int tecla, aux = 0;
     do{
-        textcolor(BRIGHTWHITE, BLACK); //Da "highlight" na opcao selecionada
+        textcolor(BRIGHTWHITE, BLACK);
+        gotoxy(25, 5);
+        printf("Nome");
+
+        gotoxy(25, 7);
+        printf("Genero");
+
+        gotoxy(25, 9);
+        printf("Ano");
+
+        gotoxy(25, 14);
+        printf("Exit");
+
+        textcolor(BLACK, WHITE);
+        switch (aux)
+        {
+            case 0:
+                gotoxy(25, 5);
+                printf("Nome");
+                break;
+            case 1:
+                gotoxy(25, 7);
+                printf("Genero");
+                break;
+            case 2:
+                gotoxy(25, 9);
+                printf("Ano");
+                break;
+            case 3:
+                gotoxy(25, 14);
+                printf("Exit");
+                break;
+        }
+        textcolor(WHITE, BLACK);
+
+        tecla = _getch();
+
+        switch (tecla) //Funcionamento da selecao das opcoes
+        {
+            case 72:
+                if (aux != 0)
+                    aux--;
+                break;
+            case 80:
+                if (aux != 3)
+                    aux++;
+                break;
+        }
+        if (tecla == 13) //Verifica se enter foi pressionado, caso sim, retorna um valor
+            return aux;
+    }
+    while (tecla != 13);
+    return -1;
+
+}
+
+int menu(){
+
+    desenha_borda(0,0, 118, 29);
+    desenha_coluna(20, 0, 29 );
+
+    int tecla, aux = 0;
+
+    //Para fazer o efeito de seleção, primeiro ele printa as opções normais, depois no switch case ele printa a opção que esta com o cursor com as cores invertidas
+    do{
+        textcolor(BRIGHTWHITE, BLACK);
         gotoxy(5, 5);
         printf( "Pesquisar");
 
