@@ -4,6 +4,8 @@
 #include <windows.h>
 #include <conio.h>
 
+
+
 #define BLACK        0
 #define BLUE         1
 #define GREEN        2
@@ -21,20 +23,7 @@
 #define LIGHTYELLOW  14
 #define BRIGHTWHITE  15
 
-typedef struct {
-    char nome[80];
-    char genero[25];
-    unsigned short ano; // 16 bits
-    float duracao;
-    char diretor[100];
-} Filme;
-
-typedef struct{
-
-    char usuario[50];
-    char senha[10];
-
-} Admin;
+#include "data_types.h"
 
 
 //Esconde o cursor no cmd
@@ -87,6 +76,18 @@ void desenha_coluna(int xi, int yi, int y){
         gotoxy(xi,yi+h); printf("%c",186);
     }
 
+}
+
+// limpa parte do console (x inicial, x final, y inicial, y final)
+void limpa_bloco (int xi, int xf, int yi, int yf){
+    textcolor(BRIGHTWHITE, BLACK);
+
+    for(int i = xi; i < xf; i++){
+        for (int j = yi; j < yf; j++){
+            gotoxy(i,j);
+            printf(" ");
+        }
+    }
 }
 
 //Mostra o nome dos filmes e opcão de info (retorna o indice do filme selecionado)
@@ -199,21 +200,26 @@ void cadastrar(Filme filmes[], int *tam){
     int auy = 0, tecla = 0;
     if(*tam<255){
         Filme *filme = malloc(sizeof(Filme));
+        // Filme filme;
         gotoxy(25, 5);
         printf("Digite o nome do filme: ");
-        scanf("%s", &filme->nome);
+        scanf("%s", filme->nome);
+        //scanf("%s", filme.nome);
         gotoxy(25,6);
         printf("Digite o genero do filme: ");
-        scanf("%s", &filme->genero);
+        scanf("%s", filme->genero);
+        //scanf("%s", filme.genero);
         gotoxy(25,7);
         printf("Digite o ano do filme: ");
-        scanf("%hu", &filme->ano);
+        scanf("%hu", &(filme->ano));
+        //scanf("%hu", &(filme.ano));
         gotoxy(25,8);
         printf("Digite a duracao do filme: ");
-        scanf("%f", &filme->duracao);
+        scanf("%f", &(filme->duracao));
+        //scanf("%f", &(filme.duracao));
         gotoxy(25,9);
         printf("Digite o diretor do filme: ");
-        scanf("%s", &aux);
+        scanf("%s", aux);
         sprintf(filme->diretor, "%s\n", aux);
 
         do{
@@ -261,6 +267,7 @@ void cadastrar(Filme filmes[], int *tam){
             {
                 if(auy == 0){
                     filmes[*tam] = *filme;
+                    // filmes[*tam] = filme;
                     (*tam)++;
                     gotoxy(25, 15);
                     printf("Cadastro confirmado!!");
@@ -317,18 +324,6 @@ int autenticacao(Admin adms[], int tam){
     limpa_bloco(24, 40, 3, 12);
     return 0;
 
-}
-
-// limpa parte do console (x inicial, x final, y inicial, y final)
-void limpa_bloco (int xi, int xf, int yi, int yf){
-    textcolor(BRIGHTWHITE, BLACK);
-
-    for(int i = xi; i < xf; i++){
-        for (int j = yi; j < yf; j++){
-            gotoxy(i,j);
-            printf(" ");
-        }
-    }
 }
 
 void mostra_info (Filme filme){
@@ -463,6 +458,10 @@ int menu(){
 
         gotoxy(5, 14);
         printf( "Exit");
+
+
+        gotoxy(40, 29);
+        printf(" Utilize as setas do teclado para navegar! ");
 
         textcolor(BLACK, WHITE);
         switch (aux)
