@@ -3,12 +3,12 @@
 
 #include "lista.h"
 
+
 int main()
 {
     printf("Hello world!\n");
 
-    struct lista_e contatos;
-    inicializa(contatos);
+    struct lista_e contatos = criaLista();
 
     return 0;
 }

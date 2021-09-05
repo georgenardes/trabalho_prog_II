@@ -1,36 +1,13 @@
-
 #include "lista.h"
 
-struct Contato{
-
-    char nome[30];
-    char email[50];
-    char telefone[15];
-
-};
-
-struct Elemento
+lista_e criaLista ()
 {
-    Contato contato;
-    //Aponta pro proximo elemento da lista
-    struct Elemento *proximo;
-
-};
-
-struct lista_e
-{
-    Elemento *inicio;
-    int cont;
-
-};
-
-
-void inicializa (struct lista_e *lista)
-{
+    struct lista_e lista;
     lista->inicio = NULL;
     lista->cont = 0;
-}
 
+    return lista;
+}
 
 Elemento *novoElemento (struct Contato contato)
 {
