@@ -33,9 +33,10 @@
 		</Compiler>
 		<Unit filename="lista.c">
 			<Option compilerVar="CC" />
-			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
-		<Unit filename="lista.h" />
+		<Unit filename="lista.h">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
