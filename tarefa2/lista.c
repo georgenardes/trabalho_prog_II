@@ -1,26 +1,35 @@
 #include "lista.h"
 
-lista_e criaLista ()
-{
-    struct lista_e lista;
-    lista->inicio = NULL;
-    lista->cont = 0;
+// Cria uma lista vazia
+Lista_e* criaLista(){
 
-    return lista;
+
+    Lista_e *contatos = (Lista_e *) malloc(sizeof(Lista_e));
+
+    contatos->cont = 0;
+    contatos->inicio = NULL;
+
+    return contatos;
+
 }
 
-Elemento *novoElemento (struct Contato contato)
+Elemento *novoElemento (char *nome, char *email, char *telefone)
 {
-    Elemento *novo = (struct Elemento)malloc(sizeof(struct Elemento));
-    novo -> contato = contato;
-    novo -> proximo = NULL;
+    Elemento *novo = (Elemento *)malloc(sizeof(Elemento));
+
+    novo->contato.nome = nome;
+    novo->contato.email = email;
+    novo->contato.telefone = telefone;
+
+    novo->proximo = NULL;
+
     return novo;
 }
 
-void insereContato(struct lista_e *lista, struct Contato elemento)
+void insereContato(Lista_e *lista, char *nome, char *email, char *telefone)
 {
 
-    struct Elemento *ponteiro = lista->inicio;
+    Elemento *ponteiro = lista->inicio;
 
     // Verifica se ja existe algum elemento na lista
     if(ponteiro != NULL)
@@ -33,23 +42,24 @@ void insereContato(struct lista_e *lista, struct Contato elemento)
         }
 
         // Cria um novo elemento e atribui o mesmo ao proximo do ultimo
-        Elemento *novo = novoElemento (elemento);
-        ponteiro -> proximo = novo;
-        lista.cont++;
+        Elemento *novoContato = novoElemento (nome, email, telefone);
+        ponteiro->proximo = novoContato;
+        lista->cont++;
 
     } else
     {
         // Cria um novo elemento e atribui como inicio da lista
-        Elemento *novo = novoElemento (elemento);
-        lista.inicio = novo;
-        lista.cont++;
+        Elemento *novoContato = novoElemento (nome, email, telefone);
+        lista->inicio = novoContato;
+        lista->cont++;
 
     }
 
     return 0;
 }
 
-void removeContato (struct lista_e *lista, int index)
+//Arrumar
+void removeContatoIndex (Lista_e *lista, int index)
 {
     Elemento *elemento = lista->inicio;
 
@@ -62,32 +72,88 @@ void removeContato (struct lista_e *lista, int index)
         }
 
         // Retira e deleta o primeiro elemento da lista
-        lista.inicio = elemento -> proximo;
-        lista.cont--;
+        lista->inicio = elemento -> proximo;
+        lista->cont--;
 
         free(elemento);
 
     }
 }
 
-void mostraContatos(struct lista_e lista){
-
+void removeContatoNome(Lista_e *lista, char *nome)
+{
     Elemento *elemento = lista->inicio;
+    Elemento *aux = NULL;
+    int isFirst = 1;
+
+    // Percorre a lista até não houver proximo elenento
+    while(elemento != NULL){
+
+        // Retira e deleta o elemento da lista
+        if (elemento->contato.nome == nome){
+
+            if(isFirst == 0){
+
+                aux->proximo = elemento->proximo;
+                lista->cont--;
+                free(elemento);
+
+            }else{
+                lista->inicio = elemento->proximo;
+                lista->cont--;
+                free(elemento);
+            }
+
+            printf("\nContato deletado\n");
+            return 0;
+        }
+
+        aux = elemento;
+        elemento = elemento->proximo;
+        isFirst = 0;
+    }
+
+    printf("\nNao ha contato com este nome\n");
+    return 0;
+
+}
+
+void mostraContatos(Lista_e lista){
+
+    Elemento *elemento = lista.inicio;
 
     // Verifica se a lista esta vazia
     while (elemento != NULL)
     {
-        printf("Nome: %s", elemento.contato.nome);
+        printf("\nNome: %s\n", elemento->contato.nome);
         elemento = elemento->proximo;
 
     }
 
-    printf("Fim");
+    //printf("\nSem mais contatos\n");
 
     return 0;
 }
 
-int quantidadeContatos (struct lista_e lista)
+void consultaContato(Lista_e lista, char *nome){
+
+    Elemento *elemento = lista.inicio;
+    // Verifica se a lista esta vazia
+    while (elemento != NULL)
+    {
+        if(elemento->contato.nome == nome){
+            printf("\nNome: %s\n", elemento->contato.nome);
+            printf("\nEmail: %s\n", elemento->contato.email);
+            printf("\nTelefone: %s\n", elemento->contato.telefone);
+            break;
+        }
+
+        elemento = elemento->proximo;
+    }
+    return 0;
+}
+
+int quantidadeContatos (Lista_e lista)
 {
     return lista.cont;
 }
