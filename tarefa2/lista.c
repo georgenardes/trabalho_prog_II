@@ -13,6 +13,36 @@ Lista_e* criaLista(){
 
 }
 
+void apagaLista(Lista_e *lista){
+
+    Elemento *elemento = lista->inicio;
+
+    if (elemento != NULL){
+        apagaRec(elemento);
+
+        //Libera memória alocada para a lista
+        free(lista);
+    }else{// A lista esta vazia
+        //Libera memória alocada para a lista
+        free(lista);
+    }
+
+    printf("Lista excluida");
+}
+
+void apagaRec(Elemento *contato){
+
+    if(contato->proximo != NULL){
+        apagaRec(contato->proximo);
+        printf("Apagando contato: %s\n", contato->contato.nome);
+        free(contato);
+    }else{
+        printf("Apagando contato: %s\n", contato->contato.nome);
+        free(contato);
+    }
+
+}
+
 Elemento *novoElemento (char *nome, char *email, char *telefone)
 {
     Elemento *novo = (Elemento *)malloc(sizeof(Elemento));
@@ -62,21 +92,29 @@ void insereContato(Lista_e *lista, char *nome, char *email, char *telefone)
 void removeContatoIndex (Lista_e *lista, int index)
 {
     Elemento *elemento = lista->inicio;
+    Elemento *aux = NULL;
+    int i = 0;
 
-    // Verifica se a lista esta vazia
-    if (elemento != NULL)
-    {
-
-        for (int i = 0; i < index; i++){
-            elemento = elemento->proximo;
-        }
-
-        // Retira e deleta o primeiro elemento da lista
-        lista->inicio = elemento -> proximo;
+    // Contato a ser retirado é o primeiro da lista
+    if(index == 0){
+        lista->inicio = elemento->proximo;
         lista->cont--;
-
         free(elemento);
+        return 0;
+    }
 
+    while(elemento->proximo != NULL){
+
+        if(i < index){
+            aux = elemento;
+            elemento = elemento->proximo;
+            i++;
+        }else{
+            aux->proximo = elemento->proximo;
+            lista->cont--;
+            free(elemento);
+            break;
+        }
     }
 }
 
@@ -141,11 +179,11 @@ void consultaContato(Lista_e lista, char *nome){
     // Verifica se a lista esta vazia
     while (elemento != NULL)
     {
+        //Percorre toda a lista e mostra contatos com o mesmo nome
         if(elemento->contato.nome == nome){
             printf("\nNome: %s\n", elemento->contato.nome);
             printf("\nEmail: %s\n", elemento->contato.email);
             printf("\nTelefone: %s\n", elemento->contato.telefone);
-            break;
         }
 
         elemento = elemento->proximo;
