@@ -31,7 +31,6 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Interface.h" />
 		<Unit filename="lista.c">
 			<Option compilerVar="CC" />
 		</Unit>

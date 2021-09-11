@@ -2,10 +2,10 @@
 
 // Cria uma lista vazia
 Lista_e* criaLista(){
-
-
+    // Aloca memória para a lista
     Lista_e *contatos = (Lista_e *) malloc(sizeof(Lista_e));
 
+    // Inicializa
     contatos->cont = 0;
     contatos->inicio = NULL;
 
@@ -13,6 +13,7 @@ Lista_e* criaLista(){
 
 }
 
+// Limpa a lista e libera a memória
 void apagaLista(Lista_e *lista){
 
     Elemento *elemento = lista->inicio;
@@ -30,6 +31,7 @@ void apagaLista(Lista_e *lista){
     printf("Lista excluida");
 }
 
+// Função criada para auxiliar na liberação da lista recursivamente
 void apagaRec(Elemento *contato){
 
     if(contato->proximo != NULL){
@@ -42,21 +44,23 @@ void apagaRec(Elemento *contato){
     }
 
 }
-
-Elemento *novoElemento (char *nome, char *email, char *telefone)
+//Função que recebe os atributos de um contato e cria um contato novo
+Elemento *novoElemento (char nome[], char email[], char telefone[])
 {
+    // Aloca memória para um elemento(contato)
     Elemento *novo = (Elemento *)malloc(sizeof(Elemento));
 
-    novo->contato.nome = nome;
-    novo->contato.email = email;
-    novo->contato.telefone = telefone;
+    sprintf(novo->contato.nome, "%s", nome);
+    sprintf(novo->contato.email, "%s", email);
+    sprintf(novo->contato.telefone, "%s", telefone);
 
     novo->proximo = NULL;
 
     return novo;
 }
 
-void insereContato(Lista_e *lista, char *nome, char *email, char *telefone)
+// Função que recebe os atributos de um contato e adiciona na lista
+void insereContato(Lista_e *lista, char nome[], char email[], char telefone[])
 {
 
     Elemento *ponteiro = lista->inicio;
@@ -84,15 +88,13 @@ void insereContato(Lista_e *lista, char *nome, char *email, char *telefone)
         lista->cont++;
 
     }
-
-    return 0;
 }
 
-//Arrumar
+// Função que remove um contato da lista atraves do index
 void removeContatoIndex (Lista_e *lista, int index)
 {
     Elemento *elemento = lista->inicio;
-    Elemento *aux = NULL;
+    Elemento *aux = NULL; // Variável auxiliar
     int i = 0;
 
     // Contato a ser retirado é o primeiro da lista
@@ -117,7 +119,7 @@ void removeContatoIndex (Lista_e *lista, int index)
         }
     }
 }
-
+// Função que remove um contato da lista atraves do nome
 void removeContatoNome(Lista_e *lista, char *nome)
 {
     Elemento *elemento = lista->inicio;
@@ -128,8 +130,8 @@ void removeContatoNome(Lista_e *lista, char *nome)
     while(elemento != NULL){
 
         // Retira e deleta o elemento da lista
-        if (elemento->contato.nome == nome){
-
+        if (strcmp(elemento->contato.nome, nome) == 0){
+            // Verifica se não é o primeiro elemento da lista
             if(isFirst == 0){
 
                 aux->proximo = elemento->proximo;
@@ -141,19 +143,13 @@ void removeContatoNome(Lista_e *lista, char *nome)
                 lista->cont--;
                 free(elemento);
             }
-
-            printf("\nContato deletado\n");
-            return 0;
+            break;
         }
 
         aux = elemento;
         elemento = elemento->proximo;
         isFirst = 0;
     }
-
-    printf("\nNao ha contato com este nome\n");
-    return 0;
-
 }
 
 void mostraContatos(Lista_e lista){
@@ -168,29 +164,42 @@ void mostraContatos(Lista_e lista){
 
     }
 
-    //printf("\nSem mais contatos\n");
-
-    return 0;
 }
 
-void consultaContato(Lista_e lista, char *nome){
+// Função que retorna um contato consultado pelo nome
+Elemento* consultaContatoNome(Lista_e lista, char *nome){
 
     Elemento *elemento = lista.inicio;
     // Verifica se a lista esta vazia
     while (elemento != NULL)
     {
         //Percorre toda a lista e mostra contatos com o mesmo nome
-        if(elemento->contato.nome == nome){
-            printf("\nNome: %s\n", elemento->contato.nome);
-            printf("\nEmail: %s\n", elemento->contato.email);
-            printf("\nTelefone: %s\n", elemento->contato.telefone);
+        if(strcmp(elemento->contato.nome, nome) == 0){
+            return elemento;
         }
-
         elemento = elemento->proximo;
     }
-    return 0;
+    return NULL;
+}
+// Função que retorna um contato consultado pelo index
+Elemento* consultaContatoIndex(Lista_e lista, int index){
+
+    Elemento *elemento = lista.inicio;
+    int i = 0;
+    // Verifica se a lista esta vazia
+    while (elemento != NULL){
+        if (i < index){
+            elemento = elemento->proximo;
+            i++;
+        }else{
+            return elemento;
+        }
+    }
+    return NULL;
+
 }
 
+// Função que retorna a quantidade de contatos na lista
 int quantidadeContatos (Lista_e lista)
 {
     return lista.cont;

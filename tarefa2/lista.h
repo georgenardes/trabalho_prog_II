@@ -7,9 +7,9 @@
 typedef struct Econtato
 {
 
-    char *nome;
-    char *email;
-    char *telefone;
+    char nome[20];
+    char email[30];
+    char telefone[15];
 
 } Contato;
 
@@ -29,13 +29,14 @@ typedef struct listaE
 } Lista_e;
 
 Lista_e* criaLista();
-Elemento *novoElemento(char *nome, char *email, char *telefone);
-void insereContato(Lista_e *lista, char *nome, char *email, char *telefone);
+Elemento *novoElemento(char nome[], char email[], char telefone[]);
+void insereContato(Lista_e *lista, char nome[], char email[], char telefone[]);
 void removeContatoIndex (Lista_e *lista, int index);
 void removeContatoNome (Lista_e *lista, char *nome);
 void apagaLista(Lista_e *lista);
 void mostraContatos(Lista_e lista);
-void consultaContato(Lista_e lista, char *nome);
+Elemento* consultaContatoNome(Lista_e lista, char *nome);
+Elemento* consultaContatoIndex(Lista_e lista, int index);
 int quantidadeContatos (Lista_e lista);
 
 
